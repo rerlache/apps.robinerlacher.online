@@ -1,0 +1,16 @@
+export const userQuestions = [
+  { id: 0, label: "My middle name is" },
+  { id: 1, label: "My favorite color is" },
+  { id: 2, label: "My favorite food is" },
+  { id: 3, label: "My favorite animal is" },
+  { id: 4, label: "My favorite movie is" },
+  { id: 5, label: "My favorite song is" },
+  { id: 6, label: "My favorite book is" },
+  { id: 7, label: "My favorite sport is" },
+  { id: 8, label: "My favorite hobby is" },
+  { id: 9, label: "My favorite place is" },
+  { id: 10, label: "The birthplace of my mother is" },
+  { id: 11, label: "The birthplace of my father is" },
+  { id: 12, label: "My mother's maiden name is" },
+  { id: 13, label: "My favorite teacher's name is" },
+];
