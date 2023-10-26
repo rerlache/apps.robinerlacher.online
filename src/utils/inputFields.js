@@ -1,3 +1,4 @@
+import { userQuestions } from "../data/userQuestions";
 export const firstname_validation = {
   id: "firstname",
   name: "firstname",
@@ -122,7 +123,7 @@ export const question_validation = {
   name: "question",
   label: "Security Question",
   type: "text",
-  placeholder: "Enter a question only you can answer",
+  placeholder: "Select a question only you can answer",
   validation: {
     required: {
       value: true,
