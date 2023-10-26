@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import Input from "../components/input";
 import {
   Box,
   Stack,
@@ -8,7 +7,7 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import { Send, InfoOutlined, PasswordOutlined } from "@mui/icons-material";
+import { Send, InfoOutlined } from "@mui/icons-material";
 import { username_validation, password_validation } from "../utils/inputFields";
 import axios from "../api/axios";
 import { auto } from "@popperjs/core";
