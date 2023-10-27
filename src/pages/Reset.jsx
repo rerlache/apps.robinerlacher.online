@@ -15,11 +15,10 @@ import AuthContext from "../context/AuthProvider";
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.!@#$%]).{8,24}$/;
 
-export default function Reset({ onFormSwitch }) {
+export default function Reset() {
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
   const errRef = useRef();
-  const questions = useState([""]);
   //#region useStates
   const [userName, setUserName] = useState("");
   const [usernameFocus, setUsernameFocus] = useState(false);
@@ -89,7 +88,7 @@ export default function Reset({ onFormSwitch }) {
         );
         setPassword("");
         setMatchPwd("");
-        onFormSwitch("login");
+        navigate("/login");
       } else {
         setErrMsg("passwords don't match!");
       }
