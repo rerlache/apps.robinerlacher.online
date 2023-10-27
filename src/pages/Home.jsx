@@ -34,7 +34,6 @@ export default function Home() {
         variant="contained"
         color="primary"
         onClick={() => {
-          setAuth({});
           navigate("/reset");
         }}
       >
@@ -44,7 +43,6 @@ export default function Home() {
         variant="contained"
         color="primary"
         onClick={() => {
-          setAuth({});
           navigate("/admin");
         }}
       >
