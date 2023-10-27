@@ -5,16 +5,19 @@ import {
   Typography,
   Button,
   TextField,
-  Autocomplete,
   Divider,
 } from "@mui/material";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import { InfoOutlined, NavigateNext, Send } from "@mui/icons-material";
 import { auto } from "@popperjs/core";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthProvider";
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.!@#$%]).{8,24}$/;
 
 export default function Reset({ onFormSwitch }) {
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
   const errRef = useRef();
   const questions = useState([""]);
   //#region useStates
@@ -93,8 +96,8 @@ export default function Reset({ onFormSwitch }) {
     } else {
       console.log("catching");
     }
-    if(errMsg){
-        setErrMsg('')
+    if (errMsg) {
+      setErrMsg("");
     }
   }
 
@@ -261,11 +264,25 @@ export default function Reset({ onFormSwitch }) {
         >
           <Stack direction={"row"} alignItems={"center"}>
             <Typography>Back to </Typography>
-            <Button onClick={() => onFormSwitch("login")}>Login</Button>
+            <Button
+              onClick={() => {
+                setAuth({});
+                navigate("/login");
+              }}
+            >
+              Login
+            </Button>
           </Stack>
           <Stack direction={"row"} alignItems={"center"}>
             <Typography>Need an account? </Typography>
-            <Button onClick={() => onFormSwitch("register")}>Register</Button>
+            <Button
+              onClick={() => {
+                setAuth({});
+                navigate("/register");
+              }}
+            >
+              Register
+            </Button>
           </Stack>
         </Box>
       </Box>
