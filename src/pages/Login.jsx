@@ -10,7 +10,6 @@ import {
 import { Send, InfoOutlined } from "@mui/icons-material";
 import axios from "../api/axios";
 import { auto } from "@popperjs/core";
-import Users from "./Users";
 import { useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
 
@@ -59,13 +58,13 @@ export default function Login() {
     try {
       const axiosConfig = {
         headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
           userName: userName,
           password: password,
         },
       };
       const response = await axios.get(LOGIN_URL, axiosConfig);
+      console.log(JSON.stringify(response.data));
       const accessToken = response.data.item1;
       const user = response.data.item2.userName;
       setAuth({ accessToken, user });
@@ -87,9 +86,6 @@ export default function Login() {
     }
   }
 
-  function logout() {
-    setSuccess(false);
-  }
   return (
     <Container>
       <Container>

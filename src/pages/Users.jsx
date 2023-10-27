@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "../api/axios";
 import useRefreshToken from "../hooks/useRefreshToken";
+import useAuth from "../hooks/useAuth";
 
 export default function Users() {
+  const { setAuth } = useAuth();
   const [users, setUsers] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const refresh = useRefreshToken();
@@ -13,9 +15,6 @@ export default function Users() {
       try {
         const response = await axios.get("/general/User/GetAllUsers", {
           signal: controller.signal,
-          headers: {
-            // Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         });
         isMounted && setUsers(response.data);
@@ -47,6 +46,7 @@ export default function Users() {
         <p>No users found!</p>
       )}
       <button onClick={() => refresh}>Refresh</button>
+      <button onClick={() => setAuth({})}>Logout</button>
     </div>
   );
 }
