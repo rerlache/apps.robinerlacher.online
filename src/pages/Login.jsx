@@ -11,6 +11,7 @@ import { Send, InfoOutlined } from "@mui/icons-material";
 import { username_validation, password_validation } from "../utils/inputFields";
 import axios from "../api/axios";
 import { auto } from "@popperjs/core";
+import Users from "./Users";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const LOGIN_URL = "/general/Login/WithData";
@@ -88,6 +89,7 @@ export default function Login({ onFormSwitch }) {
         <section>
           <h1>Welcome back</h1>
           <Typography>{successMsg}</Typography>
+          <Users />
           <Button onClick={logout}>Logout</Button>
         </section>
       ) : (
