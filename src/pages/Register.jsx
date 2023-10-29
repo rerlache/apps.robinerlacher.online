@@ -21,7 +21,7 @@ import AuthContext from "../context/AuthProvider";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const NAME_REGEX = /^[A-Z][a-z-]{2,25}$/;
-const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$/;
 const ANSWER_REGEX = /^[0-9a-zA-Z-\s]+[A-z0-9-]{1,50}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.!@#$%]).{8,24}$/;
 const REGISTER_URL = "/general/User/Register";
@@ -118,19 +118,16 @@ export default function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await axios.post(REGISTER_URL, "", {
-        headers: {
-          "Content-Type": "application/json",
-          firstName,
-          lastName,
-          userName,
-          eMail,
-          password,
-          question,
-          answer,
-        },
+      const data = JSON.stringify({
+        firstName,
+        lastName,
+        userName,
+        eMail,
+        password,
+        question,
+        answer,
       });
-      console.log("response.data", response?.data);
+      await axios.post(REGISTER_URL, data);
       navigate("/login");
     } catch (error) {
       console.log("error.response", error.response);
