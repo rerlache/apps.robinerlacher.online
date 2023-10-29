@@ -1,29 +1,25 @@
-import { useState } from "react";
-// import "./App.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Reset from "./pages/Reset";
+import Layout from "./pages/Layout";
+import Home from "./pages/Home";
+import RequireAuth from "./components/RequireAuth";
+import Users from "./pages/Users";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
-  const [currentForm, setCurrentForm] = useState("login");
-
-  function toggleForm(formName) {
-    console.log(formName);
-    setCurrentForm(formName);
-  }
-
   return (
-    <>
-      {currentForm == "login" ? (
-        <Login onFormSwitch={toggleForm} />
-      ) : currentForm == "register" ? (
-        <Register onFormSwitch={toggleForm} />
-      ) : (
-        <Reset onFormSwitch={toggleForm} />
-      )}
-      {/* <Login />
-      <Register /> */}
-    </>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Home />} />
+          <Route path="reset" element={<Reset />} />
+          <Route path="admin" element={<Users />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
