@@ -16,7 +16,7 @@ import AuthContext from "../context/AuthProvider";
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.!@#$%]).{8,24}$/;
 
 export default function Reset() {
-  const { setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
   const errRef = useRef();
   //#region useStates
@@ -50,6 +50,11 @@ export default function Reset() {
   //#endregion
 
   //#region useEffects
+  useEffect(() => {
+    if (auth.user != null) {
+      setUserName(auth.user.userName)
+    }
+  }, []);
   useEffect(() => {
     setValidPassword(PWD_REGEX.test(password));
     setValidMatchPwd(password === matchPwd);
@@ -272,6 +277,7 @@ export default function Reset() {
               Login
             </Button>
           </Stack>
+          <Button onClick={() => navigate(-1)}>Back</Button>
           <Stack direction={"row"} alignItems={"center"}>
             <Typography>Need an account? </Typography>
             <Button

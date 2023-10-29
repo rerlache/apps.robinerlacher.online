@@ -56,23 +56,17 @@ export default function Login() {
       return;
     }
     try {
-      const axiosConfig = {
-        headers: {
-          "Content-Type": "application/json",
-          userName: userName,
-          password: password,
-        },
-      };
-      const response = await axios.get(LOGIN_URL, axiosConfig);
-      console.log(JSON.stringify(response.data));
+      const data = JSON.stringify({ userName, password });
+      const response = await axios.post(LOGIN_URL, data);
       const accessToken = response.data.item1;
-      const user = response.data.item2.userName;
+      const user = response.data.item2;
       setAuth({ accessToken, user });
       setFailureMsg("");
       setUserName("");
       setPassword("");
       navigate(from, { replace: true });
     } catch (error) {
+      console.error(error)
       setSuccess(false);
       setSuccessMsg("");
       if (!error?.response) {

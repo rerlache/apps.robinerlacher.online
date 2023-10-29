@@ -1,26 +1,32 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import useRefreshToken from "../hooks/useRefreshToken";
 import useAuth from "../hooks/useAuth";
+import useRefreshToken from "../hooks/useRefreshToken";
 
 export default function Users() {
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [users, setUsers] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const refresh = useRefreshToken();
+  const navigate = useNavigate();
+
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     async function getUsers() {
       try {
-        const response = await axios.get("/general/User/GetAllUsers", {
-          signal: controller.signal,
-          withCredentials: true,
-        });
+        const config = {
+          headers: {
+            Authorization: "Bearer " + auth.accessToken,
+            withCredentials: true,
+          },
+        };
+        const response = await axios.get("/general/User/GetAllUsers", config);
         isMounted && setUsers(response.data);
       } catch (error) {
         console.log(error);
-        setErrMsg(error.message)
+        setErrMsg(error.message);
       }
     }
 
@@ -45,6 +51,7 @@ export default function Users() {
       ) : (
         <p>No users found!</p>
       )}
+      <button onClick={() => navigate("/")}>Back</button>
       <button onClick={() => refresh}>Refresh</button>
       <button onClick={() => setAuth({})}>Logout</button>
     </div>
