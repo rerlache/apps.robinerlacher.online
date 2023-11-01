@@ -1,9 +1,9 @@
 import { Button } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
-import axios from "../api/axios";
 import LoginHistory from "../components/LoginHistory";
+import UserApps from "../components/UserApps";
 
 export default function Home() {
   const { auth, setAuth } = useContext(AuthContext);
@@ -17,10 +17,10 @@ export default function Home() {
         <>
           <p>
             Welcome back, {auth.user.firstName} {auth.user.lastName}.
-            {auth.user.userName}
           </p>
         </>
       )}
+      <UserApps />
       <LoginHistory />
       <Button
         variant="contained"
@@ -50,6 +50,15 @@ export default function Home() {
         }}
       >
         Reset
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          navigate("/profile");
+        }}
+      >
+        Profile
       </Button>
       <Button
         variant="contained"

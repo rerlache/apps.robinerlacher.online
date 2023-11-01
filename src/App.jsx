@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import RequireAuth from "./components/RequireAuth";
 import Users from "./pages/Users";
 import { Route, Routes } from "react-router-dom";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="reset" element={<Reset />} />
         <Route element={<RequireAuth />}>
           <Route path="/" element={<Home />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="admin" element={<Users />} />
         </Route>
       </Route>
