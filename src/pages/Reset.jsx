@@ -8,10 +8,17 @@ import {
   Divider,
 } from "@mui/material";
 import { useRef, useState, useEffect, useContext } from "react";
-import { InfoOutlined, NavigateNext, Send } from "@mui/icons-material";
+import {
+  AccountCircle,
+  InfoOutlined,
+  NavigateBefore,
+  NavigateNext,
+  Send,
+} from "@mui/icons-material";
 import { auto } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
+import axios from "../api/axios";
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.!@#$%]).{8,24}$/;
 
@@ -31,7 +38,6 @@ export default function Reset() {
   const [question, setQuestion] = useState("what's the question?");
 
   const [answer, setAnswer] = useState("");
-  const [answerDb, setAnswerDb] = useState("");
   const [answerFocus, setAnswerFocus] = useState(false);
 
   const [stageTwo, setStageTwo] = useState(false);
@@ -52,7 +58,7 @@ export default function Reset() {
   //#region useEffects
   useEffect(() => {
     if (auth.user != null) {
-      setUserName(auth.user.userName)
+      setUserName(auth.user.userName);
     }
   }, []);
   useEffect(() => {
@@ -61,50 +67,96 @@ export default function Reset() {
   }, [password, matchPwd]);
   //#endregion
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (stageOne) {
-      console.log("check in DB if username and email match");
-      if (userName == "tuser" && eMail == "tuser@mail.com") {
-        console.log("username and email are correct, got data for stage 2");
-        setQuestion("How did you get here?");
-        setAnswerDb("by clicking next");
-        setStageOne(false);
-        setStageTwo(true);
-      } else {
-        console.log("username and mail did not match!");
-        setErrMsg("no login information found for this combination");
-      }
-    } else if (stageTwo) {
-      console.log("validating the answer");
-      if (answer === answerDb) {
-        console.log("question answered correct, now update the password");
-        setStageTwo(false);
-        setStageThree(true);
-      } else {
-        console.log("answer not correct, retry");
-        setAnswer("");
-        setErrMsg("wrong answer, try again!");
-      }
-    } else if (stageThree) {
-      if (password === matchPwd) {
-        console.log(
-          "password validated, updating the password for user: " + userName
-        );
-        setPassword("");
-        setMatchPwd("");
-        navigate("/login");
-      } else {
-        setErrMsg("passwords don't match!");
-      }
-    } else {
-      console.log("catching");
-    }
-    if (errMsg) {
-      setErrMsg("");
+  async function usernameAndEmailCheck() {
+    const config = {
+      headers: {
+        username: userName,
+        email: eMail,
+      },
+    };
+    try {
+      return await axios.get("/general/User/GetQuestionForUser", config);
+    } catch (error) {
+      setErrMsg(error.response.data);
+      return error.response;
     }
   }
 
+  async function checkAnswer() {
+    const config = {
+      headers: {
+        username: userName,
+        answer,
+      },
+    };
+    try {
+      return await axios.get("/general/User/CheckAnswer", config);
+    } catch (error) {
+      setErrMsg(error.response.data);
+      return error;
+    }
+  }
+
+  async function resetPassword() {
+    const data = JSON.stringify({
+      username: userName,
+      email: eMail,
+      answer,
+      password,
+    });
+    try {
+      return await axios.post("/general/User/ResetPassword", data);
+    } catch (error) {
+      setErrMsg(error.response.data);
+      return error;
+    }
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (errMsg) {
+      setErrMsg("");
+    }
+    if (stageOne) {
+      const question = await usernameAndEmailCheck();
+      if (question.status == 200) {
+        setQuestion(question.data);
+        setStageOne(false);
+        setStageTwo(true);
+      }
+    } else if (stageTwo) {
+      const response = await checkAnswer();
+      if (response.status == 200) {
+        setStageTwo(false);
+        setStageThree(true);
+      } else {
+        setAnswer("");
+      }
+    } else if (stageThree) {
+      const pwResponse = await resetPassword();
+      if (pwResponse.status == 200) {
+        setPassword("");
+        setMatchPwd("");
+        setStageThree(false);
+      }
+    } else {
+      navigate("/login");
+    }
+  }
+
+  function handleBack() {
+    if (stageOne) {
+      navigate(-1);
+    }
+    if (stageTwo) {
+      setStageTwo(false);
+      setStageOne(true);
+    }
+    if (stageThree) {
+      setStageThree(false);
+      setStageTwo(true);
+    }
+  }
   return (
     <Container>
       <Box
@@ -134,6 +186,14 @@ export default function Reset() {
         >
           {errMsg}
         </Typography>
+        {!stageOne && !stageTwo && !stageThree && (
+          <Stack name="done" gap={2} noValidate autoComplete="off">
+            <Typography variant="subtitle1">Reset successfull!</Typography>
+            <Button endIcon={<AccountCircle />} onClick={handleSubmit}>
+              Back to login
+            </Button>
+          </Stack>
+        )}
         {stageOne && (
           <Stack name="stageOneForm" gap={2} noValidate autoComplete="off">
             <TextField
@@ -162,7 +222,11 @@ export default function Reset() {
               onFocus={() => setEmailFocus(true)}
               onBlur={() => setEmailFocus(false)}
             />
-            <Button endIcon={<NavigateNext />} onClick={handleSubmit}>
+            <Button
+              disabled={userName == "" || eMail == ""}
+              endIcon={<NavigateNext />}
+              onClick={handleSubmit}
+            >
               Next
             </Button>
           </Stack>
@@ -183,7 +247,7 @@ export default function Reset() {
               onFocus={() => setAnswerFocus(true)}
               onBlur={() => setAnswerFocus(false)}
             />
-            <Button endIcon={<NavigateNext />} onClick={handleSubmit}>
+            <Button disabled={answer == ''} endIcon={<NavigateNext />} onClick={handleSubmit}>
               Next
             </Button>
           </Stack>
@@ -277,7 +341,9 @@ export default function Reset() {
               Login
             </Button>
           </Stack>
-          <Button onClick={() => navigate(-1)}>Back</Button>
+          <Button startIcon={<NavigateBefore />} onClick={handleBack}>
+            Back
+          </Button>
           <Stack direction={"row"} alignItems={"center"}>
             <Typography>Need an account? </Typography>
             <Button

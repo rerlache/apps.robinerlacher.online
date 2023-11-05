@@ -6,6 +6,8 @@ import {
   Container,
   Button,
   TextField,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { Send, InfoOutlined } from "@mui/icons-material";
 import axios from "../api/axios";
@@ -32,8 +34,8 @@ export default function Login() {
   const [validPassword, setValidPassword] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
 
-  const [success, setSuccess] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
+  const [staySignedIn, setStaySignedIn] = useState(localStorage.getItem("loggedIn"))
+
   const [failureMsg, setFailureMsg] = useState("");
   //#endregion
 
@@ -66,9 +68,6 @@ export default function Login() {
       setPassword("");
       navigate(from, { replace: true });
     } catch (error) {
-      console.error(error)
-      setSuccess(false);
-      setSuccessMsg("");
       if (!error?.response) {
         setFailureMsg("No server response!");
       } else if (error.response?.status === 400) {
@@ -166,8 +165,8 @@ export default function Login() {
                 <span aria-label="dollar sign">$</span>{" "}
                 <span aria-label="percent">%</span>
               </Typography>
-              {success && <p>{successMsg}</p>}
               {failureMsg && <p className="text-red-500">{failureMsg}</p>}
+              <FormControlLabel control={<Checkbox checked={staySignedIn} />} label="Label" />
               <Button onClick={handleSubmit} endIcon={<Send />}>
                 Login
               </Button>

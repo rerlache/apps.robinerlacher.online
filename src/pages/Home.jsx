@@ -1,45 +1,39 @@
 import { Button } from "@mui/material";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
 import LoginHistory from "../components/LoginHistory";
 import UserApps from "../components/UserApps";
+import useLogout from "../hooks/useLogout";
 
 export default function Home() {
-  const { auth, setAuth } = useContext(AuthContext);
+  const logout = useLogout();
   const navigate = useNavigate();
+
+  async function signOut() {
+    await logout();
+    navigate("/");
+  }
 
   return (
     <>
       <div>Home</div>
       <p>Hier kommt dann die auflistung der anwendungen!</p>
-      {auth && (
+      {/* {auth && (
         <>
           <p>
             Welcome back, {auth.user.firstName} {auth.user.lastName}.
           </p>
         </>
-      )}
+      )} */}
       <UserApps />
       <LoginHistory />
       <Button
         variant="contained"
         color="primary"
-        onClick={() => {
-          setAuth({});
-          navigate("/login");
-        }}
+        onClick={signOut}
       >
-        Login
+        Logout
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setAuth({});
-          navigate("/register");
-        }}
-      >
+      <Button variant="contained" color="primary" onClick={signOut}>
         Register
       </Button>
       <Button
