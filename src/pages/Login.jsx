@@ -166,7 +166,7 @@ export default function Login() {
                 <span aria-label="percent">%</span>
               </Typography>
               {failureMsg && <p className="text-red-500">{failureMsg}</p>}
-              <FormControlLabel control={<Checkbox checked={staySignedIn} />} label="Label" />
+              <FormControlLabel control={<Checkbox checked={staySignedIn} />} label="Remember me?" disabled={true} />
               <Button onClick={handleSubmit} endIcon={<Send />}>
                 Login
               </Button>
