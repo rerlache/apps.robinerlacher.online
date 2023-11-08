@@ -6,10 +6,12 @@ import {
   Button,
   TextField,
   Divider,
+  Grid,
 } from "@mui/material";
 import { useRef, useState, useEffect, useContext } from "react";
 import {
   AccountCircle,
+  Email,
   InfoOutlined,
   NavigateBefore,
   NavigateNext,
@@ -158,25 +160,27 @@ export default function Reset() {
     }
   }
   return (
-    <Container>
+    <Grid
+      container
+      height="100vh"
+      sx={{
+        background:
+          "linear-gradient(90deg, rgba(255,255,255,1) 30%, rgba(255,0,0,1) 60%)",
+      }}
+      columns={{ xs: 4, md: 12 }}
+      direction="row"
+    >
       <Box
         border={"1px solid black"}
         borderRadius={"25px"}
         padding={2}
         maxWidth={500}
-        marginLeft={auto}
-        marginRight={auto}
+        margin={auto}
+        xs={2}
+        md={6}
+        width="50%"
       >
         <Typography variant="h3">Reset Password</Typography>
-        <Typography variant="body2">
-          In order to reset your password, first provide your username and
-          password.
-          <br />
-          After that, you'll be prompted to answer the question from the
-          registration.
-          <br />
-          When the answer is correct, you can set a new password.
-        </Typography>
         <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
         <Typography
           ref={errRef}
@@ -196,32 +200,40 @@ export default function Reset() {
         )}
         {stageOne && (
           <Stack name="stageOneForm" gap={2} noValidate autoComplete="off">
-            <TextField
-              id="username"
-              type="text"
-              label="Username"
-              placeholder="Enter user name"
-              autoComplete="off"
-              variant="standard"
-              onChange={(e) => setUserName(e.target.value)}
-              value={userName}
-              required
-              onFocus={() => setUsernameFocus(true)}
-              onBlur={() => setUsernameFocus(false)}
-            />
-            <TextField
-              id="email"
-              type="email"
-              label="Email"
-              placeholder="Enter email"
-              autoComplete="off"
-              variant="standard"
-              onChange={(e) => setEmail(e.target.value)}
-              value={eMail}
-              required
-              onFocus={() => setEmailFocus(true)}
-              onBlur={() => setEmailFocus(false)}
-            />
+            <Box display="flex" alignItems="flex-end">
+              <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+              <TextField
+                id="username"
+                type="text"
+                label="Username"
+                placeholder="Enter user name"
+                autoComplete="off"
+                variant="standard"
+                fullWidth
+                onChange={(e) => setUserName(e.target.value)}
+                value={userName}
+                required
+                onFocus={() => setUsernameFocus(true)}
+                onBlur={() => setUsernameFocus(false)}
+              />
+            </Box>
+            <Box display="flex" alignItems="flex-end">
+              <Email sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+              <TextField
+                id="email"
+                type="email"
+                label="Email"
+                placeholder="Enter email"
+                autoComplete="off"
+                variant="standard"
+                fullWidth
+                onChange={(e) => setEmail(e.target.value)}
+                value={eMail}
+                required
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}
+              />
+            </Box>
             <Button
               disabled={userName == "" || eMail == ""}
               endIcon={<NavigateNext />}
@@ -247,7 +259,11 @@ export default function Reset() {
               onFocus={() => setAnswerFocus(true)}
               onBlur={() => setAnswerFocus(false)}
             />
-            <Button disabled={answer == ''} endIcon={<NavigateNext />} onClick={handleSubmit}>
+            <Button
+              disabled={answer == ""}
+              endIcon={<NavigateNext />}
+              onClick={handleSubmit}
+            >
               Next
             </Button>
           </Stack>
@@ -357,6 +373,24 @@ export default function Reset() {
           </Stack>
         </Box>
       </Box>
-    </Container>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        margin={auto}
+        xs={2}
+        md={6}
+      >
+        <Typography variant="subtitle1" align="center">
+          In order to reset your password, first provide your username and
+          password.
+          <br />
+          After that, you'll be prompted to answer the question from the
+          registration.
+          <br />
+          When the answer is correct, you can set a new password.
+        </Typography>
+      </Box>
+    </Grid>
   );
 }

@@ -8,8 +8,15 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
+  Grid,
+  InputAdornment,
 } from "@mui/material";
-import { Send, InfoOutlined } from "@mui/icons-material";
+import {
+  Send,
+  InfoOutlined,
+  AccountCircle,
+  Password,
+} from "@mui/icons-material";
 import axios from "../api/axios";
 import { auto } from "@popperjs/core";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,7 +41,9 @@ export default function Login() {
   const [validPassword, setValidPassword] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
 
-  const [staySignedIn, setStaySignedIn] = useState(localStorage.getItem("loggedIn"))
+  const [staySignedIn, setStaySignedIn] = useState(
+    localStorage.getItem("loggedIn")
+  );
 
   const [failureMsg, setFailureMsg] = useState("");
   //#endregion
@@ -80,25 +89,46 @@ export default function Login() {
   }
 
   return (
-    <Container>
-      <Container>
+    // <Container>
+    <Grid
+      container
+      sx={{
+        height: "100vh",
+        background:
+          "linear-gradient(90deg, rgba(255,0,0,1) 30%, rgba(255,255,255,1) 60%)",
+      }}
+      columns={{ xs: 4, md: 12 }}
+      direction="row"
+    >
+      <Box display="flex" justifyContent="center" xs={2} md={6} width="50%">
+        <Stack justifyContent="center" alignItems="center">
+          <Typography variant="h1">Welcome</Typography>
+          {/* <Typography variant="body1">to</Typography> */}
+          <Typography variant="subtitle1">Please login or register on the right.</Typography>
+          <Typography variant="subtitle2">To access my applications.</Typography>
+        </Stack>
+      </Box>
+      <Box
+        xs={2}
+        md={6}
+        border={"1px solid black"}
+        borderRadius={"25px"}
+        padding={2}
+        width="50%"
+        maxWidth={500}
+        margin={auto}
+      >
         <Box
-          border={"1px solid black"}
-          borderRadius={"25px"}
-          padding={2}
-          maxWidth={500}
-          marginLeft={auto}
-          marginRight={auto}
+          name="loginForm"
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          autoComplete="off"
         >
-          <Box
-            name="loginForm"
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            autoComplete="off"
-          >
-            <Stack gap={2}>
-              <Typography variant="h3">Login</Typography>
+          <Stack gap={2}>
+            <Typography variant="h3">Login</Typography>
+            <Box display="flex" alignItems="flex-end">
+              <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
               <TextField
                 id="username"
                 type="text"
@@ -106,6 +136,7 @@ export default function Login() {
                 variant="standard"
                 placeholder="Enter username"
                 autoComplete="off"
+                fullWidth
                 onChange={(e) => setUserName(e.target.value)}
                 value={userName}
                 ref={usernameRef}
@@ -115,27 +146,31 @@ export default function Login() {
                 onFocus={() => setUsernameFocus(true)}
                 onBlur={() => setUsernameFocus(false)}
               />
-              <Typography
-                id="usernamenote"
-                className={
-                  usernameFocus && userName && !validUsername
-                    ? "instructions"
-                    : "offscreen"
-                }
-              >
-                <InfoOutlined />
-                4 to 24 characters.
-                <br />
-                Must begin with a capital letter.
-                <br />
-                Only letters allowed.
-              </Typography>
+            </Box>
+            <Typography
+              id="usernamenote"
+              className={
+                usernameFocus && userName && !validUsername
+                  ? "instructions"
+                  : "offscreen"
+              }
+            >
+              <InfoOutlined />
+              4 to 24 characters.
+              <br />
+              Must begin with a capital letter.
+              <br />
+              Only letters allowed.
+            </Typography>
+            <Box display="flex" alignItems="flex-end">
+              <Password sx={{ color: "action.active", mr: 1, my: 0.5 }} />
               <TextField
                 id="password"
                 type="password"
                 label="Password"
                 variant="standard"
                 placeholder="Enter Password"
+                fullWidth
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 required
@@ -144,66 +179,71 @@ export default function Login() {
                 onFocus={() => setPasswordFocus(true)}
                 onBlur={() => setPasswordFocus(false)}
               />
-              <Typography
-                id="passwordnote"
-                className={
-                  passwordFocus && password && !validPassword
-                    ? "instructions"
-                    : "offscreen"
-                }
-              >
-                <InfoOutlined />
-                8 to 24 characters.
-                <br />
-                Must include uppercase and lowercase letters, a number and a
-                special character.
-                <br />
-                Allowed special characters: <span aria-label="dot">.</span>{" "}
-                <span aria-label="exclamation mark">!</span>{" "}
-                <span aria-label="at symbol">@</span>{" "}
-                <span aria-label="hashtag">#</span>{" "}
-                <span aria-label="dollar sign">$</span>{" "}
-                <span aria-label="percent">%</span>
-              </Typography>
-              {failureMsg && <p className="text-red-500">{failureMsg}</p>}
-              <FormControlLabel control={<Checkbox checked={staySignedIn} />} label="Remember me?" disabled={true} />
-              <Button onClick={handleSubmit} endIcon={<Send />}>
-                Login
-              </Button>
-            </Stack>
-          </Box>
-          <Box
-            maxWidth={500}
-            marginLeft={auto}
-            marginRight={auto}
-            display={"flex"}
-            justifyContent={"space-between"}
-          >
-            <Stack direction={"row"} alignItems={"center"}>
-              <Typography>Forgot password? </Typography>
-              <Button
-                onClick={() => {
-                  setAuth({});
-                  navigate("/reset");
-                }}
-              >
-                reset
-              </Button>
-            </Stack>
-            <Stack direction={"row"} alignItems={"center"}>
-              <Typography>Need an account? </Typography>
-              <Button
-                onClick={() => {
-                  setAuth({});
-                  navigate("/register");
-                }}
-              >
-                Register
-              </Button>
-            </Stack>
-          </Box>
+            </Box>
+            <Typography
+              id="passwordnote"
+              className={
+                passwordFocus && password && !validPassword
+                  ? "instructions"
+                  : "offscreen"
+              }
+            >
+              <InfoOutlined />
+              8 to 24 characters.
+              <br />
+              Must include uppercase and lowercase letters, a number and a
+              special character.
+              <br />
+              Allowed special characters: <span aria-label="dot">.</span>{" "}
+              <span aria-label="exclamation mark">!</span>{" "}
+              <span aria-label="at symbol">@</span>{" "}
+              <span aria-label="hashtag">#</span>{" "}
+              <span aria-label="dollar sign">$</span>{" "}
+              <span aria-label="percent">%</span>
+            </Typography>
+            {failureMsg && <p className="text-red-500">{failureMsg}</p>}
+            <FormControlLabel
+              control={<Checkbox checked={staySignedIn} />}
+              label="Remember me?"
+              disabled={true}
+            />
+            <Button onClick={handleSubmit} endIcon={<Send />}>
+              Login
+            </Button>
+          </Stack>
         </Box>
-      </Container>
-    </Container>
+        <Box
+          maxWidth={500}
+          marginLeft={auto}
+          marginRight={auto}
+          display={"flex"}
+          justifyContent={"space-between"}
+        >
+          <Stack direction={"row"} alignItems={"center"}>
+            <Typography>Forgot password? </Typography>
+            <Button
+              onClick={() => {
+                setAuth({});
+                navigate("/reset");
+              }}
+            >
+              reset
+            </Button>
+          </Stack>
+          <Stack direction={"row"} alignItems={"center"}>
+            <Typography>Need an account? </Typography>
+            <Button
+              onClick={() => {
+                setAuth({});
+                navigate("/register");
+              }}
+            >
+              Register
+            </Button>
+          </Stack>
+        </Box>
+      </Box>
+    </Grid>
+    // </Container>
   );
 }
